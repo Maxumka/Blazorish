@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazorish", "Blazorish\Blazorish.csproj", "{066AAB13-D55B-4216-9A43-F2DDC9F8F9D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blazorish.Samples", "Blazorish.Samples", "{4435B0EE-58BD-4521-935A-4A0C9239339E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazorish.Template", "Blazorish.Template\Blazorish.Template.csproj", "{8F2EB721-67EC-43C4-B358-A9F0D18C0B05}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{066AAB13-D55B-4216-9A43-F2DDC9F8F9D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{066AAB13-D55B-4216-9A43-F2DDC9F8F9D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{066AAB13-D55B-4216-9A43-F2DDC9F8F9D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{066AAB13-D55B-4216-9A43-F2DDC9F8F9D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F2EB721-67EC-43C4-B358-A9F0D18C0B05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F2EB721-67EC-43C4-B358-A9F0D18C0B05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F2EB721-67EC-43C4-B358-A9F0D18C0B05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F2EB721-67EC-43C4-B358-A9F0D18C0B05}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8F2EB721-67EC-43C4-B358-A9F0D18C0B05} = {4435B0EE-58BD-4521-935A-4A0C9239339E}
+	EndGlobalSection
+EndGlobal
