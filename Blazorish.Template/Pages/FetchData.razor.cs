@@ -8,25 +8,27 @@ public record FetchDataModel(WeatherForecast[] Forecasts);
 public abstract record FetchDataMsg
 {
     public sealed record TryGetData() : FetchDataMsg;
-
     public sealed record GetData(WeatherForecast[] Forecasts) : FetchDataMsg;
-
     public sealed record ClearData() : FetchDataMsg;
 }
 
-public class FetchDataBase : BlazorishComponentBase<FetchDataModel, FetchDataMsg>
+public class FetchDataBase : ProgramAsync<FetchDataModel, FetchDataMsg>
 {
     [Inject]
     private WeatherForecastService ForecastService { get; set; }
-    
-    protected override FetchDataModel Init()
-        => new(Array.Empty<WeatherForecast>());
+
+    protected override async Task<FetchDataModel> InitAsync()
+    {
+        var forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        
+        return new FetchDataModel(forecasts);
+    }
 
     private (FetchDataModel, Cmd<FetchDataMsg>) UpdateTryGetData(FetchDataModel model)
     {
         var cmd = Cmd<FetchDataMsg>.OfAsync(
             func: ForecastService.GetForecastAsync,
-            arg: DateTime.Now,
+            arg: DateTime.Now.AddDays(1),
             msg: x => new FetchDataMsg.GetData(x)
         );
 

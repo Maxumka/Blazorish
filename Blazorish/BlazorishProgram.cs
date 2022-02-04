@@ -2,7 +2,7 @@
 
 namespace Blazorish;
 
-public abstract class BlazorishComponentBase<TModel, TMsg> : ComponentBase
+public abstract class BlazorishProgram<TModel, TMsg> : ComponentBase
     where TMsg : class 
 {
     private TModel _model;
@@ -10,15 +10,13 @@ public abstract class BlazorishComponentBase<TModel, TMsg> : ComponentBase
     protected TModel Model
     {
         get => _model;
-        private set
+        set
         {
             _model = value;
             StateHasChanged();
         }
     }
-
-    protected abstract TModel Init();
-
+    
     protected abstract (TModel, Cmd<TMsg>) Update(TModel model, TMsg msg);
 
     protected void Dispatch(TMsg msg)
@@ -46,7 +44,4 @@ public abstract class BlazorishComponentBase<TModel, TMsg> : ComponentBase
                 break;
         }
     }
-    
-    protected override void OnInitialized()
-        => Model = Init();
 }

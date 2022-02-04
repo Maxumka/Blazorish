@@ -11,7 +11,7 @@ public abstract record CounterMsg
     public sealed record Reset : CounterMsg;
 }
 
-public class CounterBase : BlazorishComponentBase<CounterModel, CounterMsg>
+public class CounterBase : Program<CounterModel, CounterMsg>
 {
     protected override CounterModel Init()
         => new(0);
