@@ -12,21 +12,27 @@ public abstract record FetchDataMsg
     public sealed record ClearData() : FetchDataMsg;
 }
 
-public class FetchDataBase : ProgramAsync<FetchDataModel, FetchDataMsg>
+public class FetchDataBase : BlazorProgram<FetchDataModel, FetchDataMsg>
 {
     [Inject]
     private WeatherForecastService ForecastService { get; set; }
 
-    protected override async Task<FetchDataModel> InitAsync()
+    protected override (FetchDataModel, Cmd<FetchDataMsg>) Init()
     {
-        var forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
-        
-        return new FetchDataModel(forecasts);
+        var cmd = Cmd<FetchDataMsg>.OfAsyncResult(
+            func: ForecastService.GetForecastAsync,
+            arg: DateTime.Now,
+            msg: x => new FetchDataMsg.GetData(x)
+        );
+
+        var model = new FetchDataModel(Forecasts: Array.Empty<WeatherForecast>());
+
+        return (model, cmd);
     }
 
     private (FetchDataModel, Cmd<FetchDataMsg>) UpdateTryGetData(FetchDataModel model)
     {
-        var cmd = Cmd<FetchDataMsg>.OfAsync(
+        var cmd = Cmd<FetchDataMsg>.OfAsyncResult(
             func: ForecastService.GetForecastAsync,
             arg: DateTime.Now.AddDays(1),
             msg: x => new FetchDataMsg.GetData(x)
