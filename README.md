@@ -23,7 +23,7 @@ public abstract record CounterMsg
 }
 ```
 Create base component for your razor pages. 
-Base component must be inherited from BlazorishComponentBase<Model, Msg>, and implement abstract methods: Update, Init. 
+Base component must be inherited from BlazorProgram<Model, Msg>, and implement abstract methods: Update, Init. 
 ```csharp
 public class CounterBase : BlazorishComponentBase<CounterModel, CounterMsg>
 {
