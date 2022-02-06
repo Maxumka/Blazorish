@@ -1,5 +1,24 @@
-﻿<h3>NoteCard</h3>
+﻿@inherits NoteCardBase
 
-@code {
-    
-}
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title is-size-5">
+            @Model.Note.Title
+        </p>
+        <button class="card-header-icon" 
+                @onclick="() => Dispatch(new NoteCardMsg.ChangeExpand())">
+            @(Model.IsExpand ? "Close" : "Show")
+        </button>
+    </header>
+    @if (Model.IsExpand)
+    {
+        <div class="card-content">
+            <div class="content">
+                <textarea class="textarea is-medium has-fixed-size"
+                          @oninput="arg => Dispatch(new NoteCardMsg.UpdateContent(arg.Value.ToString()))">
+                    @Model.Note.Content
+                </textarea>               
+            </div>
+        </div>
+    }
+</div>

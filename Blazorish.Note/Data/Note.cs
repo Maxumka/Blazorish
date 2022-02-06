@@ -1,6 +1,7 @@
 ﻿namespace Blazorish.Note.Data;
 
-public class Note
-{
-    
-}
+public record Note(
+    int Id,
+    string Title,
+    string Content
+);

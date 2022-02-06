@@ -1,9 +1,27 @@
 @page "/"
 
-<PageTitle>Index</PageTitle>
+@inherits IndexBase
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?"/>
+<div class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-half-desktop">
+                <div class="title">
+                    Note application
+                </div>
+                <div class="subtitle">
+                    Example how to use nested component in page and ef core with blazorish
+                </div>
+                <button class="button is-primary"
+                        @onclick="() => Dispatch(new IndexMsg.TryAddNote())">
+                    Add note
+                </button>
+                @foreach (var noteCardModel in Model.NoteCardModels)
+                {
+                    <NoteCard NoteCardModel="noteCardModel"
+                              NestedDispatch="model => Dispatch(new IndexMsg.TryUpdateNote(model))"/>
+                }
+            </div>
+        </div>
+    </div>
+</div>
