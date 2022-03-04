@@ -6,8 +6,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blazorish.Samples", "Blazor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazorish.Template", "Blazorish.Template\Blazorish.Template.csproj", "{8F2EB721-67EC-43C4-B358-A9F0D18C0B05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazorish.Note", "Blazorish.Note\Blazorish.Note.csproj", "{6557FCF0-25CB-42BE-A610-1811ED5B0B44}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,13 +20,8 @@ Global
 		{8F2EB721-67EC-43C4-B358-A9F0D18C0B05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F2EB721-67EC-43C4-B358-A9F0D18C0B05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F2EB721-67EC-43C4-B358-A9F0D18C0B05}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6557FCF0-25CB-42BE-A610-1811ED5B0B44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6557FCF0-25CB-42BE-A610-1811ED5B0B44}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6557FCF0-25CB-42BE-A610-1811ED5B0B44}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6557FCF0-25CB-42BE-A610-1811ED5B0B44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8F2EB721-67EC-43C4-B358-A9F0D18C0B05} = {4435B0EE-58BD-4521-935A-4A0C9239339E}
-		{6557FCF0-25CB-42BE-A610-1811ED5B0B44} = {4435B0EE-58BD-4521-935A-4A0C9239339E}
 	EndGlobalSection
 EndGlobal
