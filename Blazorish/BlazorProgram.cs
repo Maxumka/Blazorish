@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using static System.Console;
+using Microsoft.AspNetCore.Components;
 
 namespace Blazorish;
 
@@ -7,6 +8,8 @@ public abstract class BlazorProgram<TModel, TMsg> : ComponentBase
 {
     private TModel _model;
 
+    private bool _reRender = true;
+    
     protected TModel Model
     {
         get => _model;
@@ -17,10 +20,6 @@ public abstract class BlazorProgram<TModel, TMsg> : ComponentBase
         }
     }
 
-    // callback for getting updated model from nested component
-    [Parameter]
-    public Action<TModel>? NestedDispatch { get; set; }
-    
     protected abstract (TModel, Cmd<TMsg>) Init();
     
     protected abstract (TModel, Cmd<TMsg>) Update(TModel model, TMsg msg);
@@ -28,17 +27,14 @@ public abstract class BlazorProgram<TModel, TMsg> : ComponentBase
     protected void Dispatch(TMsg msg)
     {
         (Model, var cmd) = Update(Model, msg);
+
+        if (!_reRender)
+        {
+            HandleCmd(Cmd<TMsg>.None());
+            return;
+        }
         
         HandleCmd(cmd);
-
-        NestedDispatch?.Invoke(Model);
-    }
-    
-    private async Task HandleCmdOfAsync(Task<TMsg> task)
-    {
-        var msg = await task;
-        
-        Dispatch(msg);
     }
     
     private void HandleCmd(Cmd<TMsg> cmd)
@@ -46,20 +42,57 @@ public abstract class BlazorProgram<TModel, TMsg> : ComponentBase
         switch (cmd)
         {
             case None<TMsg>:
-                return;
+                _reRender = !_reRender;
+                break;
+            case OfMsg<TMsg> cmdMsg:
+                Dispatch(cmdMsg.Msg);
+                break;
             case OfAsync<TMsg> cmdAsync:
                 InvokeAsync(() => cmdAsync.Task);
-                return;
-            case OfAsyncResult<TMsg> cmdAsync:
-                InvokeAsync(() => HandleCmdOfAsync(cmdAsync.Msg));
+                break;
+            case OfAsyncPerform<TMsg> cmdAsync:
+                InvokeAsync(() => HandleCmdOfAsyncPerform(cmdAsync.Msg));
+                break;
+            case OfAsyncEither<TMsg> either:
+                InvokeAsync(() => HandleCmdOfAsyncEither(either));
                 break;
         }
     }
 
+    private async Task HandleCmdOfAsyncPerform(Task<TMsg> task)
+    {
+        var msg = await task;
+        
+        Dispatch(msg);
+    }
+
+    private async Task HandleCmdOfAsyncEither(OfAsyncEither<TMsg> either)
+    {
+        try
+        {
+            var suc = await either.Suc;
+
+            Dispatch(suc);
+        }
+        catch(Exception e)
+        {
+            var err = either.Err(e);
+            
+            Dispatch(err);
+        }
+    }
+    
     protected override void OnInitialized()
     {
         (Model, var cmd) = Init();
         
         HandleCmd(cmd);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        WriteLine(_model);
+        
+        base.OnAfterRender(firstRender);
     }
 }
