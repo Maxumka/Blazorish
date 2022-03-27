@@ -7,19 +7,18 @@ public record FetchDataModel(WeatherForecast[] Forecasts);
 
 public abstract record FetchDataMsg
 {
-    public sealed record TryGetData() : FetchDataMsg;
+    public sealed record TryGetData : FetchDataMsg;
     public sealed record GetData(WeatherForecast[] Forecasts) : FetchDataMsg;
-    public sealed record ClearData() : FetchDataMsg;
+    public sealed record StopGettingData : FetchDataMsg;
 }
 
 public class FetchDataBase : BlazorProgram<FetchDataModel, FetchDataMsg>
 {
-    [Inject]
-    private WeatherForecastService ForecastService { get; set; }
+    [Inject] private WeatherForecastService ForecastService { get; set; } 
 
     protected override (FetchDataModel, Cmd<FetchDataMsg>) Init()
     {
-        var cmd = Cmd<FetchDataMsg>.OfAsyncResult(
+        var cmd = Cmd<FetchDataMsg>.OfAsyncPerform(
             func: ForecastService.GetForecastAsync,
             arg: DateTime.Now,
             msg: x => new FetchDataMsg.GetData(x)
@@ -32,9 +31,9 @@ public class FetchDataBase : BlazorProgram<FetchDataModel, FetchDataMsg>
 
     private (FetchDataModel, Cmd<FetchDataMsg>) UpdateTryGetData(FetchDataModel model)
     {
-        var cmd = Cmd<FetchDataMsg>.OfAsyncResult(
+        var cmd = Cmd<FetchDataMsg>.OfAsyncPerform(
             func: ForecastService.GetForecastAsync,
-            arg: DateTime.Now.AddDays(1),
+            arg: DateTime.Now,
             msg: x => new FetchDataMsg.GetData(x)
         );
 
@@ -45,14 +44,14 @@ public class FetchDataBase : BlazorProgram<FetchDataModel, FetchDataMsg>
     {
         var newModel = model with {Forecasts = forecasts};
 
-        return (newModel, Cmd<FetchDataMsg>.None());
+        var cmd = Cmd<FetchDataMsg>.OfMsg(new FetchDataMsg.TryGetData());
+
+        return (newModel, cmd);
     }
 
-    private (FetchDataModel, Cmd<FetchDataMsg>) UpdateClearData(FetchDataModel model)
+    private (FetchDataModel, Cmd<FetchDataMsg>) UpdateStopGettingData(FetchDataModel model)
     {
-        var newModel = model with {Forecasts = Array.Empty<WeatherForecast>()};
-
-        return (newModel, Cmd<FetchDataMsg>.None());
+        return (model, Cmd<FetchDataMsg>.None());
     }
 
     protected override (FetchDataModel, Cmd<FetchDataMsg>) Update(FetchDataModel model, FetchDataMsg msg)
@@ -60,9 +59,9 @@ public class FetchDataBase : BlazorProgram<FetchDataModel, FetchDataMsg>
         {
             FetchDataMsg.TryGetData 
                 => UpdateTryGetData(model),
-            FetchDataMsg.GetData {Forecasts: var v}
+            FetchDataMsg.GetData (var v)
                 => UpdateGetData(model, v),
-            FetchDataMsg.ClearData
-                => UpdateClearData(model)
+            FetchDataMsg.StopGettingData
+                => UpdateStopGettingData(model)
         };
 }

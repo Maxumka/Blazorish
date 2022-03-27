@@ -9,7 +9,7 @@ public class WeatherForecastService
 
     public async Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
     {
-        await Task.Delay(500);
+        await Task.Delay(200);
         
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
