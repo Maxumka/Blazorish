@@ -4,6 +4,14 @@ I want to write applications in C# and Blazor based on model-view-update. If you
 # Warning
 Its not production ready, its not ready for anything. I just making this in free time. <br /> 
 Proof of concepts.
+# Commands 
+The following commands are currently ready:
+* None
+* OfMsg
+* OfFuncEither
+* OfFuncPerform
+* OfAsyncEither
+* OfAsyncPerform
 # Usage
 Create cs file for your pages and, add using Blazorish. 
 Write your model, like this
