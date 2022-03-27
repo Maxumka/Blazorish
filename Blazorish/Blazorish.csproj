@@ -4,6 +4,15 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Title>Blazorish</Title>
+        <Version>1.0.0</Version>
+        <Authors>Maxumka</Authors>
+        <Description>Naive implementation MVU in Blazor inspired by elmish with hello world examples.
+I want to write applications in C# and Blazor based on model-view-update. If you too, try this.</Description>
+        <RepositoryUrl>https://github.com/Maxumka/Blazorish</RepositoryUrl>
+        <PackageTags>elm-architecture, blazor, mvu</PackageTags>
+        <PackageProjectUrl>https://github.com/Maxumka/Blazorish</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/Maxumka/Blazorish/blob/main/LICENSE</PackageLicenseUrl>
     </PropertyGroup>
 
     <ItemGroup>
