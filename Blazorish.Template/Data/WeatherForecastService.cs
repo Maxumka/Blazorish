@@ -2,14 +2,14 @@
 
 public class WeatherForecastService
 {
-    private static readonly string[] Summaries = new[]
+    private static readonly string[] Summaries = 
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
     public async Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
     {
-        await Task.Delay(200);
+        await Task.Delay(500);
         
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {

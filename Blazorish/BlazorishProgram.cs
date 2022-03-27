@@ -1,9 +1,10 @@
-﻿using static System.Console;
+﻿using Blazorish.Cmd;
+using static System.Console;
 using Microsoft.AspNetCore.Components;
 
 namespace Blazorish;
 
-public abstract class BlazorProgram<TModel, TMsg> : ComponentBase
+public abstract class BlazorishProgram<TModel, TMsg> : ComponentBase
     where TMsg : class 
 {
     private TModel _model;
@@ -45,40 +46,20 @@ public abstract class BlazorProgram<TModel, TMsg> : ComponentBase
                 _reRender = !_reRender;
                 break;
             case OfMsg<TMsg> cmdMsg:
-                Dispatch(cmdMsg.Msg);
+                cmdMsg.Dispatch(Dispatch);
                 break;
-            case OfAsync<TMsg> cmdAsync:
-                InvokeAsync(() => cmdAsync.Task);
+            case OfFuncPerform<TMsg> funcPerform:
+                funcPerform.Dispatch(Dispatch);
                 break;
-            case OfAsyncPerform<TMsg> cmdAsync:
-                InvokeAsync(() => HandleCmdOfAsyncPerform(cmdAsync.Msg));
+            case OfFuncEither<TMsg> funcEither:
+                funcEither.Dispatch(Dispatch);
                 break;
-            case OfAsyncEither<TMsg> either:
-                InvokeAsync(() => HandleCmdOfAsyncEither(either));
+            case OfAsyncPerform<TMsg> asyncPerform:
+                InvokeAsync(() => asyncPerform.Dispatch(Dispatch));
                 break;
-        }
-    }
-
-    private async Task HandleCmdOfAsyncPerform(Task<TMsg> task)
-    {
-        var msg = await task;
-        
-        Dispatch(msg);
-    }
-
-    private async Task HandleCmdOfAsyncEither(OfAsyncEither<TMsg> either)
-    {
-        try
-        {
-            var suc = await either.Suc;
-
-            Dispatch(suc);
-        }
-        catch(Exception e)
-        {
-            var err = either.Err(e);
-            
-            Dispatch(err);
+            case OfAsyncEither<TMsg> asyncEither:
+                InvokeAsync(() => asyncEither.Dispatch(Dispatch));
+                break;
         }
     }
     

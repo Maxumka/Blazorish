@@ -1,4 +1,7 @@
-﻿namespace Blazorish.Template.Pages;
+﻿using Blazorish.Cmd;
+using Microsoft.AspNetCore.Components;
+
+namespace Blazorish.Template.Pages;
 
 public record CounterModel(int Count);
 
@@ -11,7 +14,7 @@ public abstract record CounterMsg
     public sealed record Reset : CounterMsg;
 }
 
-public class CounterBase : BlazorProgram<CounterModel, CounterMsg>
+public class CounterBase : BlazorishProgram<CounterModel, CounterMsg>
 {
     protected override (CounterModel, Cmd<CounterMsg>) Init()
         => (new(0), Cmd<CounterMsg>.None());

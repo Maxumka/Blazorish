@@ -1,5 +1,6 @@
 ﻿using Blazorish.Template.Data;
 using Microsoft.AspNetCore.Components;
+using Blazorish.Cmd;
 
 namespace Blazorish.Template.Pages;
 
@@ -12,7 +13,7 @@ public abstract record FetchDataMsg
     public sealed record StopGettingData : FetchDataMsg;
 }
 
-public class FetchDataBase : BlazorProgram<FetchDataModel, FetchDataMsg>
+public class FetchDataBase : BlazorishProgram<FetchDataModel, FetchDataMsg>
 {
     [Inject] private WeatherForecastService ForecastService { get; set; } 
 
