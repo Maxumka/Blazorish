@@ -35,17 +35,18 @@ public sealed record OfAsyncPerform<TMsg>(Task<TMsg> Suc) : Cmd<TMsg>
 
 public abstract partial record Cmd<TMsg> where TMsg : class
 {
-    public static OfAsyncEither<TMsg> OfAsyncEither<TMsgDerived, TA, TB>(
+    public static OfAsyncEither<TMsg> OfAsyncEither<TMsgSucDerived, TMsgErrDerived, TA, TB>(
         Func<TA, Task<TB>> func,
         TA arg,
-        Func<TB, TMsgDerived> suc,
-        Func<Exception, TMsgDerived> err)
-        where TMsgDerived : TMsg
+        Func<TB, TMsgSucDerived> suc,
+        Func<Exception, TMsgErrDerived> err)
+        where TMsgSucDerived : TMsg
+        where TMsgErrDerived : TMsg
     {
         var sucMsgTask = Task.Run(async () => suc(await func(arg)))
-            .AsTask<TMsgDerived, TMsg>();
+            .AsTask<TMsgSucDerived, TMsg>();
 
-        var errMsg = err.AsFunc<TMsgDerived, TMsg>();
+        var errMsg = err.AsFunc<TMsgErrDerived, TMsg>();
 
         return new OfAsyncEither<TMsg>(sucMsgTask, errMsg);
     }
