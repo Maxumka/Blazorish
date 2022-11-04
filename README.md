@@ -1,9 +1,9 @@
 # Blazorish
-Naive implementation MVU in Blazor inspired by elmish with hello world examples. <br />
+Naive implementation MVU in Blazor inspired by elmish (without razor syntax). <br />
 I want to write applications in C# and Blazor based on model-view-update. If you too, try this. 
 # Warning
 Its not production ready, its not ready for anything. I just making this in free time. <br /> 
-Proof of concepts.
+Just for fun.
 # Commands 
 The following commands are currently ready:
 * None
@@ -13,65 +13,69 @@ The following commands are currently ready:
 * OfAsyncEither
 * OfAsyncPerform
 # Usage
-Create cs file for your pages and, add using Blazorish. 
+Just create class and inherintce BlazorishSimpleComponent, in generic parameters add your model and msg 
 Write your model, like this
 ```csharp
-public record CounterModel(int Count);
+public record Model(int Count);
 ```
 And add your messages 
 ```csharp
 
-public abstract record CounterMsg
+public abstract record Msg
 {
-    public sealed record Increment : CounterMsg;
-
-    public sealed record Decrement : CounterMsg;
-
-    public sealed record Reset : CounterMsg;
+    public sealed record Increment : Msg;
+    public sealed record Decrement : Msg;
+    public sealed record Reset : Msg;
 }
 ```
-Create base component for your razor pages. 
-Base component must be inherited from BlazorProgram<Model, Msg>, and implement abstract methods: Update, Init. 
+After that implement abstract methods: Update, Init and View. 
 ```csharp
-public class CounterBase : BlazorProgram<CounterModel, CounterMsg>
+protected override Model Init() => new(0);
+
+protected override Model Update(Model model, Msg msg) => msg switch
 {
-    protected override CounterModel Init()
-        => new(0);
+    Msg.Increment => model with {Count = model.Count + 1},
+    Msg.Decrement => model with {Count = model.Count - 1},
+    _ => model with {Count = 0}
+};
 
-    protected override (CounterModel, Cmd<CounterMsg>) Update(CounterModel counterModel, CounterMsg counterMsg)
-        => counterMsg switch
-        {
-            CounterMsg.Increment => (counterModel with {Count = counterModel.Count + 1}, Cmd<CounterMsg>.None()),
-            CounterMsg.Decrement => (counterModel with {Count = counterModel.Count - 1}, Cmd<CounterMsg>.None()),
-            CounterMsg.Reset => (counterModel with {Count = 0}, Cmd<CounterMsg>.None())
-        };
-}
+protected override Tag View(Model model) =>
+    div(
+        children(
+            h1(
+                content("Counter")
+            ),
+            p(
+                content($"Current count: {model.Count}")
+            ),
+            btn(
+                content("Increment"),
+                classes("btn btn-primary"),
+                onclick(_ => Dispatch(new Msg.Increment()))
+            ),
+            btn(
+                content("Decrement"),
+                classes("btn btn-primary"),
+                onclick(_ => Dispatch(new Msg.Decrement()))
+            ),
+            btn(
+                content("Reset"),
+                classes("btn btn-primary"),
+                onclick(_ => Dispatch(new Msg.Reset()))
+            )
+        )
+    );
 ```
-After that, inherit your razor page or component from CounterBase. Use property naming Model for getting current state pages. 
-Use Dispatch method for update current state, pass message  
-```razor
-@page "/counter"
-
-@inherits CounterBase
-
-<PageTitle>Counter</PageTitle>
-
-<h1>Counter</h1>
-
-<p role="status">Current count: @Model.Count</p>
-
-<button class="btn btn-primary" @onclick="() => Dispatch(new CounterMsg.Increment())">
-    Increment
-</button>
-
-<button class="btn btn-primary" @onclick="() => Dispatch(new CounterMsg.Decrement())">
-    Decrement
-</button>
-
-<button class="btn btn-primary" @onclick="() => Dispatch(new CounterMsg.Reset())">
-    Reset
-</button>
+Also add route attribute to your component
+```csharp
+[Route("/counter")]
+public class CounterComponent : BlazorishSimpleComponent<CounterComponent.Model, CounterComponent.Msg>
 ```
-Congratulations! You create razor page with MVU architecture.
+Optional, add static using if you don't want write static class for dsl
+```csharp
+global using static Blazorish.Html.Tag;
+global using static Blazorish.Html.Attr;
+```
+Congratulations! You create blazor component with MVU architecture.
 
-In Blazorish.Template has examples based on defaut blazor WASM template.
+Blazorish.Samples project has examples based on defaut blazor WASM template.
