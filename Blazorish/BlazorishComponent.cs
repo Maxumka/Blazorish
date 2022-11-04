@@ -8,8 +8,6 @@ public abstract class BlazorishProgram<TModel, TMsg> : ComponentBase
     where TMsg : class 
 {
     private TModel _model;
-
-    private bool _reRender = true;
     
     protected TModel Model
     {
@@ -28,12 +26,6 @@ public abstract class BlazorishProgram<TModel, TMsg> : ComponentBase
     protected void Dispatch(TMsg msg)
     {
         (Model, var cmd) = Update(Model, msg);
-
-        if (!_reRender)
-        {
-            HandleCmd(Cmd<TMsg>.None());
-            return;
-        }
         
         HandleCmd(cmd);
     }
@@ -43,7 +35,6 @@ public abstract class BlazorishProgram<TModel, TMsg> : ComponentBase
         switch (cmd)
         {
             case None<TMsg>:
-                _reRender = !_reRender;
                 break;
             case OfMsg<TMsg> cmdMsg:
                 cmdMsg.Dispatch(Dispatch);
