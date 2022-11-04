@@ -1,4 +1,8 @@
-﻿namespace Blazorish.Template.Data;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Blazorish.Samples.Data;
 
 public class WeatherForecastService
 {

@@ -1,10 +1,12 @@
 ﻿using Blazorish.Cmd;
+using Blazorish.Html;
 using static System.Console;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Blazorish;
 
-public abstract class BlazorishProgram<TModel, TMsg> : ComponentBase
+public abstract class BlazorishComponent<TModel, TMsg> : ComponentBase
     where TMsg : class 
 {
     private TModel _model;
@@ -30,6 +32,8 @@ public abstract class BlazorishProgram<TModel, TMsg> : ComponentBase
         HandleCmd(cmd);
     }
     
+    protected abstract Tag View(TModel model);
+
     private void HandleCmd(Cmd<TMsg> cmd)
     {
         switch (cmd)
@@ -66,5 +70,12 @@ public abstract class BlazorishProgram<TModel, TMsg> : ComponentBase
         WriteLine(_model);
         
         base.OnAfterRender(firstRender);
+    }
+    
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        TagBuilder.Build(builder, View(Model), this);
+        
+        base.BuildRenderTree(builder);
     }
 }
