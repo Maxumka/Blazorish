@@ -35,9 +35,9 @@ public sealed record OfTaskPerform<TMsg>(Task<TMsg> Suc) : Cmd<TMsg>
 
 public abstract partial record Cmd<msg> where msg : class
 {
-    public static OfTaskEither<msg> OfTaskEither<sucSubMsg, errSubMsg, b>(
-        Task<b> task,
-        Func<b, sucSubMsg> sucFunc,
+    public static OfTaskEither<msg> OfTaskEither<sucSubMsg, errSubMsg, res>(
+        Task<res> task,
+        Func<res, sucSubMsg> sucFunc,
         Func<Exception, errSubMsg> errFunc)
         where sucSubMsg : msg
         where errSubMsg : msg

@@ -32,26 +32,28 @@ public sealed record OfFuncPerform<TMsg>(Func<TMsg> Suc) : Cmd<TMsg>
 
 public abstract partial record Cmd<msg> where msg : class
 {
-    public static OfFuncEither<msg> OfFuncEither<TMsgDerived, TA, TB>(
-        Func<TA, TB> func,
-        TA arg,
-        Func<TB, TMsgDerived> suc,
-        Func<Exception, TMsgDerived> err
-    ) where TMsgDerived : msg
+    public static OfFuncEither<msg> OfFuncEither<sucSubMsg, errSubMsg, res>(
+        Func<res> func,
+        Func<res, sucSubMsg> suc,
+        Func<Exception, errSubMsg> err) 
+        where sucSubMsg : msg
+        where errSubMsg : msg
     {
-        var sucMsgFunc = () => suc(func(arg));
-
-        return new OfFuncEither<msg>(sucMsgFunc.AsFunc<TMsgDerived, msg>(), err.AsFunc<TMsgDerived, msg>());
+        var sucFunc = () => suc(func());
+        var sucMsgFunc = sucFunc
+            .AsFunc<sucSubMsg, msg>();
+        
+        var errMsgFunc = err
+            .AsFunc<errSubMsg, msg>();
+        
+        return new OfFuncEither<msg>(sucMsgFunc, errMsgFunc);
     }
 
-    public static OfFuncPerform<msg> OfFuncPerform<TMsgDerived, TA, TB>(
-        Func<TA, TB> func,
-        TA arg,
-        Func<TB, TMsgDerived> suc
-    ) where TMsgDerived : msg
+    public static OfFuncPerform<msg> OfFuncPerform<subMsg, res>(Func<res> func, Func<res, subMsg> suc) 
+        where subMsg : msg
     {
-        var sucMsgFunc = () => suc(func(arg));
+        var sucMsgFunc = () => suc(func());
 
-        return new OfFuncPerform<msg>(sucMsgFunc.AsFunc<TMsgDerived, msg>());
+        return new OfFuncPerform<msg>(sucMsgFunc.AsFunc<subMsg, msg>());
     }
 }
