@@ -40,22 +40,13 @@ public class FetchDataComponent : BlazorishComponent<FetchDataComponent.Model, F
 
         return (model, cmd);
     }
-
-    private (Model, Cmd<Msg>) UpdateGetData(Model model, WeatherForecast[] forecasts)
-    {
-        var newModel = model with {Forecasts = forecasts};
-
-        var cmd = Cmd<Msg>.OfMsg(new Msg.TryGetData());
-
-        return (newModel, cmd);
-    }
-
+    
     protected override (Model, Cmd<Msg>) Update(Model model, Msg msg) => msg switch
     {
         Msg.TryGetData 
             => UpdateTryGetData(model),
         Msg.GetData {Forecasts: var forecasts} 
-            => UpdateGetData(model, forecasts)
+            => (model with {Forecasts = forecasts}, Cmd<Msg>.None)
     };
 
     private static Tag LoadingView() =>

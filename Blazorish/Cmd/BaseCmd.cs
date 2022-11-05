@@ -17,9 +17,9 @@ public sealed record OfMsg<TMsg>(TMsg Msg) : Cmd<TMsg>
 
 public abstract partial record Cmd<msg> where msg : class
 {
-    public static None<msg> None()
-        => new None<msg>();
+    public static None<msg> None => 
+        new();
 
-    public static OfMsg<msg> OfMsg(msg msg)
-        => new OfMsg<msg>(msg);
+    public static OfMsg<msg> OfMsg(msg msg) 
+        => new(msg);
 }   
