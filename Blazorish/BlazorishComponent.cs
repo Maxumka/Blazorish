@@ -9,14 +9,14 @@ namespace Blazorish;
 public abstract class BlazorishComponent<TModel, TMsg> : ComponentBase
     where TMsg : class 
 {
-    private TModel _model;
+    private TModel _innerModel;
     
-    protected TModel Model
+    private TModel InnerModel
     {
-        get => _model;
-        private set
+        get => _innerModel;
+        set
         {
-            _model = value;
+            _innerModel = value;
             StateHasChanged();
         }
     }
@@ -27,7 +27,7 @@ public abstract class BlazorishComponent<TModel, TMsg> : ComponentBase
 
     protected void Dispatch(TMsg msg)
     {
-        (Model, var cmd) = Update(Model, msg);
+        (InnerModel, var cmd) = Update(InnerModel, msg);
         
         HandleCmd(cmd);
     }
@@ -60,21 +60,21 @@ public abstract class BlazorishComponent<TModel, TMsg> : ComponentBase
     
     protected override void OnInitialized()
     {
-        (Model, var cmd) = Init();
+        (InnerModel, var cmd) = Init();
         
         HandleCmd(cmd);
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
-        WriteLine(_model);
+        WriteLine(_innerModel);
         
         base.OnAfterRender(firstRender);
     }
     
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        TagBuilder.Build(builder, View(Model), this);
+        TagBuilder.Build(builder, View(InnerModel), this);
         
         base.BuildRenderTree(builder);
     }

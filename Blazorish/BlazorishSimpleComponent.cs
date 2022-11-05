@@ -6,14 +6,14 @@ namespace Blazorish;
 
 public abstract class BlazorishSimpleComponent<TModel, TMsg> : ComponentBase
 {
-    private TModel _model;
+    private TModel _innerModel;
 
-    private TModel Model
+    private TModel InnerModel
     {
-        get => _model;
+        get => _innerModel;
         set
         {
-            _model = value;
+            _innerModel = value;
             StateHasChanged();
         }
     }
@@ -24,26 +24,26 @@ public abstract class BlazorishSimpleComponent<TModel, TMsg> : ComponentBase
     
     protected void Dispatch(TMsg msg)
     {
-        Model = Update(Model, msg);
+        InnerModel = Update(InnerModel, msg);
     }
     
     protected abstract Tag View(TModel model);
     
     protected override void OnInitialized()
     {
-        Model = Init();
+        InnerModel = Init();
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
-        Console.WriteLine(_model);
+        Console.WriteLine(_innerModel);
         
         base.OnAfterRender(firstRender);
     }
     
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        TagBuilder.Build(builder, View(Model), this);
+        TagBuilder.Build(builder, View(InnerModel), this);
         
         base.BuildRenderTree(builder);
     }
