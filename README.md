@@ -10,10 +10,10 @@ The following commands are currently ready:
 * OfMsg
 * OfFuncEither
 * OfFuncPerform
-* OfAsyncEither
-* OfAsyncPerform
+* OfTaskEither
+* OfTaskPerform
 # Usage
-Just create class and inherintce BlazorishSimpleComponent, in generic parameters add your model and msg 
+Just create class and inherintce BlazorishSimpleComponent, in generic parameters add your model and msg.
 Write your model, like this
 ```csharp
 public record Model(int Count);
