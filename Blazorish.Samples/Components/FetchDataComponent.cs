@@ -8,35 +8,34 @@ namespace Blazorish.Samples.Components;
 [Route("/fetchdata")]
 public class FetchDataComponent : BlazorishComponent<FetchDataComponent.Model, FetchDataComponent.Msg>
 {
-    [Inject] private WeatherForecastService ForecastService { get; set; } 
-    
+    [Inject] private WeatherForecastService ForecastService { get; set; }
+
     public record Model(WeatherForecast[] Forecasts);
 
     public abstract record Msg
     {
         public sealed record TryGetData : Msg;
+
         public sealed record GetData(WeatherForecast[] Forecasts) : Msg;
     }
 
     protected override (Model, Cmd<Msg>) Init()
     {
-        var cmd = Cmd<Msg>.OfAsyncPerform(
-            func: ForecastService.GetForecastAsync,
-            arg: DateTime.Now,
-            msg: x => new Msg.GetData(x)
-        );
-
         var model = new Model(Array.Empty<WeatherForecast>());
+        
+        var cmd = Cmd<Msg>.OfTaskPerform(
+            ForecastService.GetForecastAsync(DateTime.Now),
+            x => new Msg.GetData(x)
+        );
 
         return (model, cmd);
     }
 
     private (Model, Cmd<Msg>) UpdateTryGetData(Model model)
     {
-        var cmd = Cmd<Msg>.OfAsyncPerform(
-            func: ForecastService.GetForecastAsync,
-            arg: DateTime.Now,
-            msg: x => new Msg.GetData(x)
+        var cmd = Cmd<Msg>.OfTaskPerform(
+            ForecastService.GetForecastAsync(DateTime.Now),
+            x => new Msg.GetData(x)
         );
 
         return (model, cmd);

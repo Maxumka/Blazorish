@@ -49,10 +49,10 @@ public abstract class BlazorishComponent<TModel, TMsg> : ComponentBase
             case OfFuncEither<TMsg> funcEither:
                 funcEither.Dispatch(Dispatch);
                 break;
-            case OfAsyncPerform<TMsg> asyncPerform:
+            case OfTaskPerform<TMsg> asyncPerform:
                 InvokeAsync(() => asyncPerform.Dispatch(Dispatch));
                 break;
-            case OfAsyncEither<TMsg> asyncEither:
+            case OfTaskEither<TMsg> asyncEither:
                 InvokeAsync(() => asyncEither.Dispatch(Dispatch));
                 break;
         }

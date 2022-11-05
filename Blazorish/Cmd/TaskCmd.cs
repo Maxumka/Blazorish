@@ -2,7 +2,7 @@
 
 namespace Blazorish.Cmd;
 
-public sealed record OfAsyncEither<TMsg>(Task<TMsg> Suc, Func<Exception, TMsg> Err) : Cmd<TMsg>
+public sealed record OfTaskEither<TMsg>(Task<TMsg> Suc, Func<Exception, TMsg> Err) : Cmd<TMsg>
     where TMsg : class
 {
     public override async void Dispatch(Action<TMsg> dispatch)
@@ -22,7 +22,7 @@ public sealed record OfAsyncEither<TMsg>(Task<TMsg> Suc, Func<Exception, TMsg> E
     }
 }
 
-public sealed record OfAsyncPerform<TMsg>(Task<TMsg> Suc) : Cmd<TMsg>
+public sealed record OfTaskPerform<TMsg>(Task<TMsg> Suc) : Cmd<TMsg>
     where TMsg : class
 {
     public override async void Dispatch(Action<TMsg> dispatch)
@@ -33,30 +33,32 @@ public sealed record OfAsyncPerform<TMsg>(Task<TMsg> Suc) : Cmd<TMsg>
     }
 }
 
-public abstract partial record Cmd<TMsg> where TMsg : class
+public abstract partial record Cmd<msg> where msg : class
 {
-    public static OfAsyncEither<TMsg> OfAsyncEither<TMsgSucDerived, TMsgErrDerived, TA, TB>(
-        Func<TA, Task<TB>> func,
-        TA arg,
-        Func<TB, TMsgSucDerived> suc,
-        Func<Exception, TMsgErrDerived> err)
-        where TMsgSucDerived : TMsg
-        where TMsgErrDerived : TMsg
+    public static OfTaskEither<msg> OfTaskEither<sucSubMsg, errSubMsg, b>(
+        Task<b> task,
+        Func<b, sucSubMsg> sucFunc,
+        Func<Exception, errSubMsg> errFunc)
+        where sucSubMsg : msg
+        where errSubMsg : msg
     {
-        var sucMsgTask = Task.Run(async () => suc(await func(arg)))
-            .AsTask<TMsgSucDerived, TMsg>();
+        var sucMsgTask = Task
+            .Run(async () => sucFunc(await task))
+            .AsTask<sucSubMsg, msg>();
 
-        var errMsg = err.AsFunc<TMsgErrDerived, TMsg>();
+        var errMsg = errFunc
+            .AsFunc<errSubMsg, msg>();
 
-        return new OfAsyncEither<TMsg>(sucMsgTask, errMsg);
+        return new OfTaskEither<msg>(sucMsgTask, errMsg);
     }
     
-    public static OfAsyncPerform<TMsg> OfAsyncPerform<TMsgDerived, TA, TB>(Func<TA, Task<TB>> func, TA arg, Func<TB, TMsgDerived> msg)
-        where TMsgDerived : TMsg
+    public static OfTaskPerform<msg> OfTaskPerform<subMsg, res>(Task<res> task, Func<res, subMsg> msg)
+        where subMsg : msg
     {
-        var msgTask = Task.Run(async () => msg(await func(arg)))
-            .AsTask<TMsgDerived, TMsg>();
+        var msgTask = Task
+            .Run(async () => msg(await task))
+            .AsTask<subMsg, msg>();
 
-        return new OfAsyncPerform<TMsg>(msgTask);
+        return new OfTaskPerform<msg>(msgTask);
     }
 }
