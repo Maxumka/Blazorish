@@ -38,6 +38,12 @@ public sealed class Tag : Element
             builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(receiver, action));
         }
         
+        foreach (var attr in _attributes.Where(a => a is AttrOnChange))
+        {
+            var action = (attr as AttrOnChange)!.Action;
+            builder.AddAttribute(seq++, "onchange", EventCallback.Factory.Create(receiver, action));
+        }
+        
         foreach (var attr in _attributes.Where(a => a is AttrId))
         {
             var id = (attr as AttrId)!.Id;
@@ -66,6 +72,12 @@ public sealed class Tag : Element
         {
             var target = (attr as AttrTarget)!.Target;
             builder.AddAttribute(seq++, "target", target);
+        }
+        
+        foreach (var attr in _attributes.Where(a => a is AttrType))
+        {
+            var type = (attr as AttrType)!.Type;
+            builder.AddAttribute(seq++, "type", type);
         }
         
         foreach (var attr in _attributes)
@@ -130,4 +142,13 @@ public sealed class Tag : Element
 
     public static Tag article(params Attr[] attrs)
         => new("article", attrs);
+
+    public static Tag input(params Attr[] attrs)
+        => new("input", attrs);
+    
+    public static Tag label(params Attr[] attrs)
+        => new("label", attrs);
+
+    public static Tag form(params Attr[] attrs)
+        => new("form", attrs);
 }

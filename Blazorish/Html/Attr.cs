@@ -1,4 +1,5 @@
 ﻿using Blazorish.Html.Elements;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Blazorish.Html;
@@ -93,6 +94,26 @@ public sealed class AttrTarget : Attr
     }
 }
 
+public sealed class AttrOnChange : Attr
+{
+    public Action<ChangeEventArgs> Action { get; init; }
+
+    internal AttrOnChange(Action<ChangeEventArgs> action)
+    {
+        Action = action;
+    }
+}
+
+public sealed class AttrType : Attr
+{
+    public string Type { get; init; }
+
+    internal AttrType(string type)
+    {
+        Type = type;
+    }
+}
+
 public abstract class Attr
 {
     public static AttrContent content(string? content) 
@@ -121,5 +142,11 @@ public abstract class Attr
 
     public static AttrTarget target(string target)
         => new(target);
+
+    public static AttrOnChange onchange(Action<ChangeEventArgs> action)
+        => new(action);
+
+    public static AttrType type(string type)
+        => new(type);
 }
 
