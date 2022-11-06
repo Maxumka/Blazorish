@@ -1,24 +1,7 @@
-﻿using Microsoft.AspNetCore.Components.Web;
+﻿using Blazorish.Html.Elements;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Blazorish.Html;
-
-public abstract class Attr
-{
-    public static AttrContent content(string? content) 
-        => new(content);
-
-    public static AttrId id(string id) 
-        => new(id);
-    
-    public static AttrClasses classes(params string[] classes) 
-        => new(classes);
-
-    public static AttrOnClick onclick(Action<MouseEventArgs> action) 
-        => new(action);
-    
-    public static AttrChildren children(params Tag[] children) 
-        => new(children);
-}
 
 public sealed class AttrContent : Attr
 {
@@ -62,10 +45,81 @@ public sealed class AttrOnClick : Attr
 
 public sealed class AttrChildren : Attr
 {
-    public Tag[] Children { get; init; }
+    public Element[] Children { get; init; }
 
-    internal AttrChildren(Tag[] children)
+    internal AttrChildren(Element[] children)
     {
         Children = children;
     }
 }
+
+public sealed class AttrHref : Attr
+{
+    public string Href { get; init; }
+
+    internal AttrHref(string href)
+    {
+        Href = href;
+    }
+}
+
+public sealed class AttrTitle : Attr
+{
+    public string Title { get; init; }
+
+    internal AttrTitle(string title)
+    {
+        Title = title;
+    }
+}
+
+public sealed class AttrAreaHidden : Attr
+{
+    public bool AriaHidden { get; init; }
+
+    public AttrAreaHidden(bool ariaHidden)
+    {
+        AriaHidden = ariaHidden;
+    }
+}
+
+public sealed class AttrTarget : Attr
+{
+    public string Target { get; init; }
+    
+    public AttrTarget(string target)
+    {
+        Target = target;
+    }
+}
+
+public abstract class Attr
+{
+    public static AttrContent content(string? content) 
+        => new(content);
+
+    public static AttrId id(string id) 
+        => new(id);
+    
+    public static AttrClasses classes(params string[] classes) 
+        => new(classes);
+
+    public static AttrOnClick onclick(Action<MouseEventArgs> action) 
+        => new(action);
+    
+    public static AttrChildren children(params Element[] children) 
+        => new(children);
+
+    public static AttrHref href(string href)
+        => new(href);
+
+    public static AttrTitle title(string title)
+        => new(title);
+
+    public static AttrAreaHidden areaHidden(bool areaHidden)
+        => new(areaHidden);
+
+    public static AttrTarget target(string target)
+        => new(target);
+}
+

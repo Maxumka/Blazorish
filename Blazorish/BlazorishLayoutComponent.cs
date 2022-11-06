@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Blazorish;
 
-public abstract class BlazorishComponentOnlyHtml : ComponentBase
+public class BlazorishLayoutComponent : LayoutComponentBase
 {
-    protected abstract Element View();
+    protected virtual Element View() => 
+        Fragment.create(Body);
     
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {

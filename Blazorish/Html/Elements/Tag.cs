@@ -1,15 +1,80 @@
-﻿namespace Blazorish.Html;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
-public sealed class Tag
+namespace Blazorish.Html.Elements;
+
+public sealed class Tag : Element
 {
-    internal string Name { get; init; } 
-    
-    internal Attr[] Attrs { get; init; }
+    private readonly string _name;
 
-    internal Tag(string name, Attr[] attrs)
+    private readonly Attr[] _attributes;
+
+    public Element[] Children =>
+        _attributes.OfType<AttrChildren>().SelectMany(a => a.Children).ToArray();
+    
+    private Tag(string name, Attr[] attributes)
     {
-        Name = name;
-        Attrs = attrs;
+        _name = name;
+        _attributes = attributes;
+    }
+    
+    internal override void Build(RenderTreeBuilder builder, ref int seq, object receiver)
+    {
+        builder.OpenElement(seq++, _name);
+        
+        foreach (var attr in _attributes.Where(a => a is AttrClasses))
+        {
+            var classes = (attr as AttrClasses)!.Classes;
+
+            foreach (var @class in classes)
+            {
+                builder.AddAttribute(seq++, "class", @class);
+            }
+        }
+
+        foreach (var attr in _attributes.Where(a => a is AttrOnClick))
+        {
+            var action = (attr as AttrOnClick)!.Action;
+            builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(receiver, action));
+        }
+        
+        foreach (var attr in _attributes.Where(a => a is AttrId))
+        {
+            var id = (attr as AttrId)!.Id;
+            builder.AddAttribute(seq++, "id", id);
+        }
+
+        foreach (var attr in _attributes.Where(a => a is AttrHref))
+        {
+            var href = (attr as AttrHref)!.Href;
+            builder.AddAttribute(seq++, "href", href);
+        }
+        
+        foreach (var attr in _attributes.Where(a => a is AttrTitle))
+        {
+            var title = (attr as AttrTitle)!.Title;
+            builder.AddAttribute(seq++, "title", title);
+        }
+        
+        foreach (var attr in _attributes.Where(a => a is AttrAreaHidden))
+        {
+            var areaHidden = (attr as AttrAreaHidden)!.AriaHidden;
+            builder.AddAttribute(seq++, "area-hidden", areaHidden);
+        }
+        
+        foreach (var attr in _attributes.Where(a => a is AttrTarget))
+        {
+            var target = (attr as AttrTarget)!.Target;
+            builder.AddAttribute(seq++, "target", target);
+        }
+        
+        foreach (var attr in _attributes)
+        {
+            if (attr is AttrContent {Content: var content})
+            {
+                builder.AddContent(seq++, content);
+            }   
+        }
     }
     
     public static Tag div(params Attr[] attrs)
@@ -50,4 +115,19 @@ public sealed class Tag
     
     public static Tag td(params Attr[] attrs)
         => new("td", attrs);
+
+    public static Tag a(params Attr[] attrs)
+        => new("a", attrs);
+
+    public static Tag span(params Attr[] attrs)
+        => new("span", attrs);
+    
+    public static Tag nav(params Attr[] attrs)
+        => new("nav", attrs);
+
+    public static Tag main(params Attr[] attrs)
+        => new("main", attrs);
+
+    public static Tag article(params Attr[] attrs)
+        => new("article", attrs);
 }

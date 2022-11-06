@@ -1,59 +1,31 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Blazorish.Html.Elements;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Blazorish.Html;
 
 public static class TagBuilder
 {
-    public static void Build(RenderTreeBuilder builder, Tag tag, object receiver)
+    public static void Build(RenderTreeBuilder builder, Element element, object receiver)
     {
         var seq = -1;
         
-        BuildNode(builder, ref seq, tag, receiver);
+        BuildNode(builder, ref seq, element, receiver);
     }
 
-    private static void BuildNode(RenderTreeBuilder builder, ref int seq, Tag tag, object receiver)
+    public static void BuildNode(RenderTreeBuilder builder, ref int seq, Element element, object receiver)
     {
-        builder.OpenElement(seq++, tag.Name);
-        
-        foreach (var attr in tag.Attrs.Where(a => a is AttrClasses))
-        {
-            var classes = (attr as AttrClasses)!.Classes;
+        element.Build(builder, ref seq, receiver);
 
-            foreach (var @class in classes)
-            {
-                builder.AddAttribute(seq++, "class", @class);
-            }
-        }
-
-        foreach (var attr in tag.Attrs.Where(a => a is AttrOnClick))
+        if (element is not Tag tag)
         {
-            var action = (attr as AttrOnClick)!.Action;
-            builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(receiver, action));
+            return;
         }
         
-        foreach (var attr in tag.Attrs.Where(a => a is AttrId))
+        foreach (var child in tag.Children)
         {
-            var id = (attr as AttrId)!.Id;
-            builder.AddAttribute(seq++, "id", id);
+            BuildNode(builder, ref seq, child, receiver);
         }
-        
-        foreach (var attr in tag.Attrs)
-        {
-            if (attr is AttrContent {Content: var content})
-            {
-                builder.AddContent(seq++, content);
-            }
             
-            if (attr is AttrChildren {Children: var children})
-            {
-                foreach (var child in children)
-                {
-                    BuildNode(builder, ref seq, child, receiver);
-                }
-            }
-        }
-        
         builder.CloseElement();
     }
 }

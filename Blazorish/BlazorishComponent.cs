@@ -1,5 +1,6 @@
 ﻿using Blazorish.Cmd;
 using Blazorish.Html;
+using Blazorish.Html.Elements;
 using static System.Console;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -32,7 +33,7 @@ public abstract class BlazorishComponent<TModel, TMsg> : ComponentBase
         HandleCmd(cmd);
     }
     
-    protected abstract Tag View(TModel model);
+    protected abstract Element View(TModel model);
 
     private void HandleCmd(Cmd<TMsg> cmd)
     {

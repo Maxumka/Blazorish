@@ -1,4 +1,5 @@
 ﻿using Blazorish.Html;
+using Blazorish.Html.Elements;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -27,7 +28,7 @@ public abstract class BlazorishSimpleComponent<TModel, TMsg> : ComponentBase
         InnerModel = Update(InnerModel, msg);
     }
     
-    protected abstract Tag View(TModel model);
+    protected abstract Element View(TModel model);
     
     protected override void OnInitialized()
     {
