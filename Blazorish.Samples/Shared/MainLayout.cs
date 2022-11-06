@@ -2,7 +2,7 @@
 
 namespace Blazorish.Samples.Shared;
 
-public class BlazorishMainLayout : BlazorishLayoutComponent
+public class MainLayout : BlazorishLayoutComponent
 {
     protected override Element View() => 
         div(
