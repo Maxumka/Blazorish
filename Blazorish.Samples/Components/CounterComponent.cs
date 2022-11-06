@@ -1,4 +1,4 @@
-﻿using Blazorish.Html;
+﻿using Blazorish.Html.Elements;
 using Microsoft.AspNetCore.Components;
 
 namespace Blazorish.Samples.Components;
@@ -24,7 +24,7 @@ public class CounterComponent : BlazorishSimpleComponent<CounterComponent.Model,
         _ => model with {Count = 0}
     };
 
-    protected override Tag View(Model model) =>
+    protected override Element View(Model model) =>
         div(
             children(
                 h1(

@@ -1,4 +1,4 @@
-﻿using Blazorish.Html;
+﻿using Blazorish.Html.Elements;
 using Microsoft.AspNetCore.Components;
 
 namespace Blazorish.Samples.Components;
@@ -6,12 +6,12 @@ namespace Blazorish.Samples.Components;
 [Route("/")]
 public class IndexComponent : BlazorishComponentOnlyHtml
 {
-    private static Tag TitleView() =>
+    private static Element TitleView() =>
         h1(
             content("Hello, World")
         );
     
-    protected override Tag View() =>
+    protected override Element View() =>
         div(
             children(
                 TitleView(),

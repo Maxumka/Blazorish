@@ -1,5 +1,5 @@
 ﻿using Blazorish.Cmd;
-using Blazorish.Html;
+using Blazorish.Html.Elements;
 using Blazorish.Samples.Data;
 using Microsoft.AspNetCore.Components;
 
@@ -49,7 +49,7 @@ public class FetchDataComponent : BlazorishComponent<FetchDataComponent.Model, F
             => (model with {Forecasts = forecasts}, Cmd<Msg>.None)
     };
 
-    private static Tag LoadingView() =>
+    private static Element LoadingView() =>
         p(
             children(
                 em(
@@ -58,7 +58,7 @@ public class FetchDataComponent : BlazorishComponent<FetchDataComponent.Model, F
             )
         );
 
-    private Tag ViewWithData(Model model) =>
+    private Element ViewWithData(Model model) =>
         table(
             classes("table"),
             children(
@@ -106,7 +106,7 @@ public class FetchDataComponent : BlazorishComponent<FetchDataComponent.Model, F
             )
         );
     
-    protected override Tag View(Model model) =>
+    protected override Element View(Model model) =>
         div(
             children(
                 h1(
