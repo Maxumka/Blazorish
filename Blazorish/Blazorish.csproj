@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Title>Blazorish</Title>
@@ -16,8 +16,8 @@ I want to write applications in C# and Blazor based on model-view-update. If you
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.10" />
-      <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.3" />
+      <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
     </ItemGroup>
 
 </Project>
